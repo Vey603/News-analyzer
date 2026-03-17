@@ -10,7 +10,9 @@ class TestArticle(unittest.TestCase):
 
     def test_article_creation(self):
         """Test creating an Article instance."""
-        article = Article(title="Test Title", description="Test Description", url="http://example.com")
+        article = Article(
+            title="Test Title", description="Test Description", url="http://example.com"
+        )
         self.assertEqual(article.title, "Test Title")
         self.assertEqual(article.description, "Test Description")
         self.assertEqual(article.url, "http://example.com")
@@ -18,9 +20,9 @@ class TestArticle(unittest.TestCase):
     def test_article_attributes(self):
         """Test Article attributes are accessible."""
         article = Article("Title", "Desc", "URL")
-        self.assertTrue(hasattr(article, 'title'))
-        self.assertTrue(hasattr(article, 'description'))
-        self.assertTrue(hasattr(article, 'url'))
+        self.assertTrue(hasattr(article, "title"))
+        self.assertTrue(hasattr(article, "description"))
+        self.assertTrue(hasattr(article, "url"))
 
     def test_article_equality(self):
         """Test Article equality."""

@@ -1,16 +1,14 @@
 """Display utilities for Platzi News."""
 
-from typing import List
 
 from rich.console import Console
-from rich.table import Table
 
 from ..core.models import Article
 
 console = Console()
 
 
-def display_articles(articles: List[Article]) -> None:
+def display_articles(articles: list[Article]) -> None:
     """Display articles in vertical format."""
     print(f"Debug: Displaying {len(articles)} articles")  # Poor logging practice
     if not articles:
@@ -22,7 +20,9 @@ def display_articles(articles: List[Article]) -> None:
     for i, article in enumerate(articles, 1):
         console.print(f"[bold cyan]Artículo {i}:[/bold cyan]")
         console.print(f"[bold]Título:[/bold] {article.title}")
-        console.print(f"[bold]Descripción:[/bold] {article.description or 'Sin descripción'}")
+        console.print(
+            f"[bold]Descripción:[/bold] {article.description or 'Sin descripción'}"
+        )
         console.print(f"[bold]URL:[/bold] {article.url}")
         console.print("─" * 50)
         console.print()

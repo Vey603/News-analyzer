@@ -19,3 +19,23 @@ dependencies = [
 [project.scripts]
 platzi-news = "platzi_news.main:main"
 
+[dependency-groups]
+dev = [
+    "ruff>=0.15.6",
+]
+
+[tool.ruff.lint]
+select = [
+    # pycodestyle
+    "E",
+    # Pyflakes
+    "F",
+    # pyupgrade
+    "UP",
+    # flake8-bugbear
+    "B",
+    # flake8-simplify
+    "SIM",
+    # isort
+    "I",
+]

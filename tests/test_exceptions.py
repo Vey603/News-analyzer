@@ -2,7 +2,13 @@
 
 import unittest
 
-from platzi_news.core.exceptions import PlatziNewsError, ConfigError, APIError, AnalysisError, SourceError
+from platzi_news.core.exceptions import (
+    AnalysisError,
+    APIError,
+    ConfigError,
+    PlatziNewsError,
+    SourceError,
+)
 
 
 class TestExceptions(unittest.TestCase):
