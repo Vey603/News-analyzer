@@ -31,17 +31,21 @@ class GuardianAPI(NewsSource):
         }
         try:
             logger.debug("Making request to The Guardian API")
-            response = requests.get(self.BASE_URL, params=params, timeout=settings.request_timeout)
+            response = requests.get(
+                self.BASE_URL, params=params, timeout=settings.request_timeout
+            )
             response.raise_for_status()
             data = response.json()
             articles = []
             for result in data.get("response", {}).get("results", []):
                 fields = result.get("fields", {})
-                articles.append(Article(
-                    title=result.get("webTitle", ""),
-                    description=fields.get("trailText", ""),
-                    url=result.get("webUrl", ""),
-                ))
+                articles.append(
+                    Article(
+                        title=result.get("webTitle", ""),
+                        description=fields.get("trailText", ""),
+                        url=result.get("webUrl", ""),
+                    )
+                )
             logger.info(f"Retrieved {len(articles)} articles from The Guardian")
             return articles
         except requests.RequestException as e:

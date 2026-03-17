@@ -24,18 +24,22 @@ class Settings(BaseSettings):
     max_articles: int = Field(10, description="Maximum number of articles to fetch")
     request_timeout: int = Field(10, description="Timeout for API requests in seconds")
     openai_model: str = Field("gpt-4", description="OpenAI model to use for analysis")
-    openai_max_tokens: int = Field(500, description="Maximum tokens for OpenAI response")
+    openai_max_tokens: int = Field(
+        500, description="Maximum tokens for OpenAI response"
+    )
 
 
 # Global settings instance with validation
 try:
     settings = Settings()
 except ValidationError as e:
-    missing_keys = [err['loc'][0] for err in e.errors() if err['type'] == 'missing']
+    missing_keys = [err["loc"][0] for err in e.errors() if err["type"] == "missing"]
     if missing_keys:
         msg = (
-            f"Las siguientes claves de API no están configuradas: {', '.join(missing_keys)}. "
-            "Por favor, configure las variables de entorno en un archivo .env o en su sistema."
+            "Las siguientes claves de API no están configuradas: "
+            f"{', '.join(missing_keys)}. "
+            "Por favor, configure las variables de entorno "
+            "en un archivo .env o en su sistema."
         )
         raise ConfigError(msg) from e
     else:

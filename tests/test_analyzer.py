@@ -21,9 +21,7 @@ class TestOpenAIAnalyzer(unittest.TestCase):
         mock_client.chat.completions.create.return_value = mock_response
 
         analyzer = OpenAIAnalyzer("fake_key")
-        articles = [
-            Article("Test", "Desc", "http://example.com")
-        ]
+        articles = [Article("Test", "Desc", "http://example.com")]
         answer = analyzer.analyze(articles, "What is this about?")
         self.assertEqual(answer, "Test answer")
 

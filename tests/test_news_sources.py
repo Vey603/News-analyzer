@@ -5,8 +5,8 @@ from unittest.mock import Mock, patch
 
 import requests
 
-from platzi_news.core.services import NewsService
 from platzi_news.core.exceptions import APIError
+from platzi_news.core.services import NewsService
 from platzi_news.sources.guardian import GuardianAPI
 from platzi_news.sources.newsapi import NewsAPI
 
@@ -81,8 +81,6 @@ class TestNewsAPI(unittest.TestCase):
         mock_get.side_effect = requests.RequestException("Network error")
         with self.assertRaises(APIError):
             self.api.fetch_articles("test query")
-
-
 
 
 class TestNewsService(unittest.TestCase):

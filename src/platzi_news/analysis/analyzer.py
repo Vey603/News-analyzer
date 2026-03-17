@@ -2,10 +2,8 @@
 
 from __future__ import annotations
 
-import logging
-import os
-from typing import Any
 import json
+import logging
 
 from openai import OpenAI
 
@@ -52,14 +50,14 @@ class OpenAIAnalyzer:
         # Prepare context from articles
         context = "Aquí hay algunos artículos de noticias:\n\n"
         for i, article in enumerate(articles, 1):
-            if hasattr(article, 'title'):  # Article object
+            if hasattr(article, "title"):  # Article object
                 title = article.title
                 desc = article.description
                 url = article.url
             else:  # dict
-                title = article.get('title', 'N/A')
-                desc = article.get('description', 'N/A')
-                url = article.get('url', 'N/A')
+                title = article.get("title", "N/A")
+                desc = article.get("description", "N/A")
+                url = article.get("url", "N/A")
             context += f"{i}. Título: {title}\n"
             context += f"   Descripción: {desc}\n"
             context += f"   URL: {url}\n\n"
@@ -73,7 +71,9 @@ class OpenAIAnalyzer:
                 messages=[
                     {
                         "role": "system",
-                        "content": "You are a helpful assistant analyzing news articles.",
+                        "content": (
+                            "You are a helpful assistant analyzing news articles."
+                        ),
                     },
                     {"role": "user", "content": prompt},
                 ],
@@ -106,24 +106,22 @@ def get_analyzer() -> OpenAIAnalyzer:
 
 def save_analysis_to_file(articles, question, answer, filename="analysis.json"):
     """Save analysis results to a file."""
-    data = {
-        "question": question,
-        "articles_count": len(articles),
-        "answer": answer
-    }
-    file = open(filename, "w")
-    json.dump(data, file)
-    file.close()
+    data = {"question": question, "articles_count": len(articles), "answer": answer}
+    with open(filename, "w") as file:
+        json.dump(data, file)
 
 
 def get_article_summaries(articles):
     """Get summaries of all articles as a list."""
     summaries = []
     for article in articles:
-        if hasattr(article, 'title'):
+        if hasattr(article, "title"):
             summary = f"{article.title}: {article.description[:100]}..."
         else:
-            summary = f"{article.get('title', 'N/A')}: {article.get('description', 'N/A')[:100]}..."
+            summary = (
+                f"{article.get('title', 'N/A')}: "
+                f"{article.get('description', 'N/A')[:100]}..."
+            )
         summaries.append(summary)
     return summaries
 
