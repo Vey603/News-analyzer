@@ -31,9 +31,11 @@ class Settings(BaseSettings):
 
 # Global settings instance with validation
 try:
-    settings = Settings()
+    settings = Settings()  # type: ignore[call-arg]
 except ValidationError as e:
-    missing_keys = [err["loc"][0] for err in e.errors() if err["type"] == "missing"]
+    missing_keys = [
+        str(err["loc"][0]) for err in e.errors() if err["type"] == "missing"
+    ]
     if missing_keys:
         msg = (
             "Las siguientes claves de API no están configuradas: "

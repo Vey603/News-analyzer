@@ -54,10 +54,6 @@ class OpenAIAnalyzer:
                 title = article.title
                 desc = article.description
                 url = article.url
-            else:  # dict
-                title = article.get("title", "N/A")
-                desc = article.get("description", "N/A")
-                url = article.get("url", "N/A")
             context += f"{i}. Título: {title}\n"
             context += f"   Descripción: {desc}\n"
             context += f"   URL: {url}\n\n"
