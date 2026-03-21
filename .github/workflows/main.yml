@@ -2,7 +2,7 @@ name: Code Style
 
 on:
   push:
-    branches: [ main, develop ] 
+    branches: [ main, develop ]
   pull_request:
     branches: [ main ]
 
@@ -23,8 +23,12 @@ jobs:
       - name: ruff format
         run: uv run ruff format
 
-      - name: mypy 
+      - name: mypy
         run: uv run mypy src
 
-      - name: pytest 
+      - name: pytest
+        env:
+          GUARDIAN_API_KEY: "this-in-not-a-api-key"
+          NEWSAPI_API_KEY: "this-in-not-a-api-key"
+          OPENAI_API_KEY: "this-in-not-a-api-key"
         run: uv run pytest -n auto
