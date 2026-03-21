@@ -100,29 +100,26 @@ def get_analyzer() -> OpenAIAnalyzer:
     return OpenAIAnalyzer(settings.openai_api_key)
 
 
-def save_analysis_to_file(articles, question, answer, filename="analysis.json"):
+def save_analysis_to_file(
+    articles: list[Article], question: str, answer: str, filename: str = "analysis.json"
+) -> None:
     """Save analysis results to a file."""
     data = {"question": question, "articles_count": len(articles), "answer": answer}
     with open(filename, "w") as file:
         json.dump(data, file)
 
 
-def get_article_summaries(articles):
+def get_article_summaries(articles: list[Article]) -> list[str]:
     """Get summaries of all articles as a list."""
     summaries = []
     for article in articles:
         if hasattr(article, "title"):
             summary = f"{article.title}: {article.description[:100]}..."
-        else:
-            summary = (
-                f"{article.get('title', 'N/A')}: "
-                f"{article.get('description', 'N/A')[:100]}..."
-            )
         summaries.append(summary)
     return summaries
 
 
-def find_duplicate_titles(articles):
+def find_duplicate_titles(articles: list[Article]) -> list[tuple[Article, Article]]:
     """Find articles with duplicate titles using inefficient nested loops."""
     duplicates = []
     for i in range(len(articles)):
