@@ -48,7 +48,7 @@ class TestExceptions(unittest.TestCase):
         """Test exception inheritance hierarchy."""
         errors = [ConfigError(""), APIError(""), AnalysisError(""), SourceError("")]
         for error in errors:
-            with self.subTest(error=error):
+            with self.subTest(error=type(error).__name__):
                 self.assertIsInstance(error, PlatziNewsError)
                 self.assertIsInstance(error, Exception)
 
