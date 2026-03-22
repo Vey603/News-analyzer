@@ -1,5 +1,6 @@
 """Configuration management for Platzi News."""
 
+import sentry_sdk
 from pydantic import Field, ValidationError
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -46,3 +47,12 @@ except ValidationError as e:
         raise ConfigError(msg) from e
     else:
         raise ConfigError(f"Error de configuración: {e}") from e
+
+
+sentry_sdk.init(
+    dsn="https://36763cae5652bd68fb599d534770bcf2@o4511085318045696.ingest.us.sentry.io/4511085330169856",
+    # Add data like request headers and IP for users,
+    # see https://docs.sentry.io/platforms/python/data-management/data-collected/
+    # for more info
+    send_default_pii=True,
+)
