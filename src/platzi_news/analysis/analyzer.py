@@ -2,8 +2,10 @@
 
 from __future__ import annotations
 
+import itertools
 import json
 import logging
+from collections import defaultdict
 
 from openai import OpenAI
 
@@ -79,7 +81,7 @@ class OpenAIAnalyzer:
             content = response.choices[0].message.content
             if content is None:
                 raise AnalysisError("OpenAI returned empty response")
-            answer = content.strip()
+            answer: str = content.strip()
             logger.info("Successfully received analysis from OpenAI")
             return answer
         except Exception as e:
@@ -126,4 +128,23 @@ def find_duplicate_titles(articles: list[Article]) -> list[tuple[Article, Articl
         for j in range(i + 1, len(articles)):
             if articles[i].title == articles[j].title:
                 duplicates.append((articles[i], articles[j]))
+    return duplicates
+
+
+def find_duplicate_titles_improved(
+    articles: list[Article],
+) -> list[tuple[Article, Article]]:
+
+    title_to_articles = defaultdict(list)
+
+    for article in articles:
+        title_to_articles[article.title].append(article)
+
+    duplicates = []
+
+    for article_with_same_title in title_to_articles.values():
+        if len(article_with_same_title) > 1:
+            for pair in itertools.combinations(article_with_same_title, 2):
+                duplicates.append(pair)
+
     return duplicates
