@@ -2,12 +2,15 @@
 
 import logging
 
+import httpx
 import requests
 
 from ..config import settings
 from ..core.exceptions import APIError
 from ..core.models import Article
 from . import NewsSource
+
+logger = logging.getLogger(__name__)
 
 
 class GuardianAPI(NewsSource):
@@ -20,7 +23,6 @@ class GuardianAPI(NewsSource):
 
     def fetch_articles(self, query: str) -> list[Article]:
         """Fetch articles from The Guardian."""
-        logger = logging.getLogger(__name__)
         logger.debug(f"Fetching articles from The Guardian for query: {query}")
 
         params: dict[str, str | int] = {
@@ -30,7 +32,6 @@ class GuardianAPI(NewsSource):
             "page-size": settings.max_articles,
         }
         try:
-            logger.debug("Making request to The Guardian API")
             response = requests.get(
                 self.BASE_URL, params=params, timeout=settings.request_timeout
             )
@@ -55,3 +56,33 @@ class GuardianAPI(NewsSource):
                 "Verifique su conexión a internet y la clave de API de The Guardian."
             )
             raise APIError(msg) from e
+
+    async def afetch_articles(self, query: str) -> list[Article]:
+        """Fetch articles from The Guardian."""
+        logger.debug(f"Fetching articles from The Guardian for query: {query}")
+
+        params: dict[str, str | int] = {
+            "q": query,
+            "api-key": self.api_key,
+            "show-fields": "headline,trailText,shortUrl",
+            "page-size": settings.max_articles,
+        }
+        logger.debug("Making request to The Guardian API")
+
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                self.BASE_URL, params=params, timeout=settings.request_timeout
+            )
+            data = response.json()
+            articles = []
+            for result in data.get("response", {}).get("results", []):
+                fields = result.get("fields", {})
+                articles.append(
+                    Article(
+                        title=result.get("webTitle", ""),
+                        description=fields.get("trailText", ""),
+                        url=result.get("webUrl", ""),
+                    )
+                )
+            logger.info(f"Retrieved {len(articles)} articles from The Guardian")
+            return articles

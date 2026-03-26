@@ -11,3 +11,7 @@ class NewsSource(Protocol):
     def fetch_articles(self, query: str) -> list[Article]:
         """Fetch articles based on the query."""
         ...
+
+    async def afetch_articles(self, query: str) -> list[Article]:
+        """Fetch articles based on the query."""
+        ...
