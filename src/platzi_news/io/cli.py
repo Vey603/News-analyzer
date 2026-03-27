@@ -95,7 +95,7 @@ async def main() -> NoReturn:
             )
             articles = await service.asearch_articles(args.source, args.query)
             logger.info(f"Retrieved {len(articles)} articles for analysis")
-            answer = service.analyze_articles(articles, args.question)
+            answer = await service.aanalyze_articles(articles, args.question)
             logger.info("Analysis completed successfully")
             display_answer(answer)
         else:

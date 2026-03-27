@@ -78,6 +78,18 @@ class NewsService:
         """
         return self.analyzer.analyze(articles, question)
 
+    async def aanalyze_articles(self, articles: list[Article], question: str) -> str:
+        """Analyze articles and answer a question.
+
+        Args:
+            articles: List of articles to analyze.
+            question: The question to answer based on the articles.
+
+        Returns:
+            The AI-generated answer.
+        """
+        return await self.analyzer.aanalyze(articles, question)
+
     def find_articles_by_keyword(
         self, articles: list[Article], keyword: str
     ) -> list[Article]:
