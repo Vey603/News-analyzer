@@ -7,11 +7,13 @@ import json
 import logging
 from collections import defaultdict
 
-from openai import OpenAI
+from openai import AsyncOpenAI
 
 from ..config import settings
 from ..core.exceptions import AnalysisError
 from ..core.models import Article
+
+logger = logging.getLogger(__name__)
 
 
 class OpenAIAnalyzer:
@@ -27,9 +29,9 @@ class OpenAIAnalyzer:
         Args:
             api_key: The OpenAI API key for authentication.
         """
-        self.client = OpenAI(api_key=api_key)
+        self.client = AsyncOpenAI(api_key=api_key)
 
-    def analyze(self, articles: list[Article], question: str) -> str:
+    async def aanalyze(self, articles: list[Article], question: str) -> str:
         """Analyze articles and answer the question.
 
         Args:
@@ -42,7 +44,6 @@ class OpenAIAnalyzer:
         Raises:
             AnalysisError: If analysis fails.
         """
-        logger = logging.getLogger(__name__)
         logger.debug(f"Analyzing {len(articles)} articles with question: {question}")
 
         if not articles:
@@ -64,7 +65,7 @@ class OpenAIAnalyzer:
         logger.debug("Sending request to OpenAI API")
 
         try:
-            response = self.client.chat.completions.create(
+            response = await self.client.chat.completions.create(
                 model=settings.openai_model,
                 messages=[
                     {

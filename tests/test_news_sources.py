@@ -1,7 +1,8 @@
 """Tests for news sources."""
 
+import asyncio
 import unittest
-from unittest.mock import Mock, patch
+from unittest.mock import AsyncMock, Mock, patch
 
 import requests
 
@@ -123,14 +124,14 @@ class TestNewsService(unittest.TestCase):
 
     @patch("platzi_news.core.services.get_analyzer")
     def test_analyze_articles(self, mock_get_analyzer):
-        mock_analyzer = Mock()
-        mock_analyzer.analyze.return_value = "answer"
+        mock_analyzer = AsyncMock()
+        mock_analyzer.aanalyze.return_value = "answer"
         mock_get_analyzer.return_value = mock_analyzer
 
         service = NewsService()
-        articles = [Mock()]
-        answer = service.analyze_articles(articles, "question")
-        mock_analyzer.analyze.assert_called_once_with(articles, "question")
+        articles = [AsyncMock()]
+        answer = asyncio.run(service.aanalyze_articles(articles, "question"))
+        mock_analyzer.aanalyze.assert_called_once_with(articles, "question")
         self.assertEqual(answer, "answer")
 
 

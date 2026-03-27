@@ -66,7 +66,7 @@ class NewsService:
         source = self.get_source(source_name)
         return await source.afetch_articles(query)
 
-    def analyze_articles(self, articles: list[Article], question: str) -> str:
+    async def aanalyze_articles(self, articles: list[Article], question: str) -> str:
         """Analyze articles and answer a question.
 
         Args:
@@ -76,7 +76,7 @@ class NewsService:
         Returns:
             The AI-generated answer.
         """
-        return self.analyzer.analyze(articles, question)
+        return await self.analyzer.aanalyze(articles, question)
 
     def find_articles_by_keyword(
         self, articles: list[Article], keyword: str

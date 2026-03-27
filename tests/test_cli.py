@@ -32,7 +32,7 @@ class TestCLI(unittest.TestCase):
         mock_service = AsyncMock()
         mock_service_class.return_value = mock_service
         mock_service.asearch_articles.return_value = []
-        mock_service.analyze_articles.return_value = "Answer"
+        mock_service.aanalyze_articles.return_value = "Answer"
 
         with patch(
             "sys.argv",
@@ -40,7 +40,7 @@ class TestCLI(unittest.TestCase):
         ):
             asyncio.run(main())
         mock_service.asearch_articles.assert_called_once_with("guardian", "test")
-        mock_service.analyze_articles.assert_called_once_with([], "question")
+        mock_service.aanalyze_articles.assert_called_once_with([], "question")
         mock_exit.assert_called_once_with(0)
 
     @patch("sys.exit")
