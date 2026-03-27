@@ -2,12 +2,15 @@
 
 import logging
 
+import httpx
 import requests
 
 from ..config import settings
 from ..core.exceptions import APIError
 from ..core.models import Article
 from . import NewsSource
+
+logger = logging.getLogger(__name__)
 
 
 class NewsAPI(NewsSource):
@@ -20,7 +23,6 @@ class NewsAPI(NewsSource):
 
     def fetch_articles(self, query: str) -> list[Article]:
         """Fetch articles from NewsAPI."""
-        logger = logging.getLogger(__name__)
         logger.debug(f"Fetching articles from NewsAPI for query: {query}")
 
         params: dict[str, str | int] = {
@@ -30,7 +32,6 @@ class NewsAPI(NewsSource):
             "language": "es",
         }
         try:
-            logger.debug("Making request to NewsAPI")
             response = requests.get(
                 self.BASE_URL, params=params, timeout=settings.request_timeout
             )
@@ -53,3 +54,31 @@ class NewsAPI(NewsSource):
                 "Verifique su conexión a internet y la clave de API de NewsAPI."
             )
             raise APIError(msg) from e
+
+    async def afetch_articles(self, query: str) -> list[Article]:
+        """Fetch articles from NewsAPI."""
+        logger.debug(f"Fetching articles from NewsAPI for query: {query}")
+
+        params: dict[str, str | int] = {
+            "q": query,
+            "apiKey": self.api_key,
+            "pageSize": settings.max_articles,
+            "language": "es",
+        }
+        logger.debug("Making request to NewsAPI")
+
+        async with httpx.AsyncClient() as client:
+            response = await client.get(
+                self.BASE_URL, params=params, timeout=settings.request_timeout
+            )
+            data = response.json()
+            articles = [
+                Article(
+                    title=article.get("title", ""),
+                    description=article.get("description", ""),
+                    url=article.get("url", ""),
+                )
+                for article in data.get("articles", [])
+            ]
+            logger.info(f"Retrieved {len(articles)} articles from NewsAPI")
+            return articles

@@ -70,7 +70,7 @@ def parse_args() -> SimpleNamespace:
         sys.exit(1)
 
 
-def main() -> NoReturn:
+async def main() -> NoReturn:
     """Main entry point for the CLI application."""
     args = parse_args()
 
@@ -86,14 +86,14 @@ def main() -> NoReturn:
         service = NewsService()
         if args.command == "search":
             logger.info(f"Searching for '{args.query}' in {args.source}")
-            articles = service.search_articles(args.source, args.query)
+            articles = await service.asearch_articles(args.source, args.query)
             logger.info(f"Found {len(articles)} articles")
             display_articles(articles)
         elif args.command == "ask":
             logger.info(
                 f"Asking '{args.question}' about '{args.query}' from {args.source}"
             )
-            articles = service.search_articles(args.source, args.query)
+            articles = await service.asearch_articles(args.source, args.query)
             logger.info(f"Retrieved {len(articles)} articles for analysis")
             answer = service.analyze_articles(articles, args.question)
             logger.info("Analysis completed successfully")

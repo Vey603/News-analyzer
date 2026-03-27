@@ -53,6 +53,19 @@ class NewsService:
         source = self.get_source(source_name)
         return source.fetch_articles(query)
 
+    async def asearch_articles(self, source_name: str, query: str) -> list[Article]:
+        """Search for articles from a specific source.
+
+        Args:
+            source_name: The name of the news source to search in.
+            query: The search query string.
+
+        Returns:
+            A list of Article objects matching the query.
+        """
+        source = self.get_source(source_name)
+        return await source.afetch_articles(query)
+
     def analyze_articles(self, articles: list[Article], question: str) -> str:
         """Analyze articles and answer a question.
 
